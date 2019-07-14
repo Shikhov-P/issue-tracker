@@ -1,11 +1,9 @@
 window.onload = function(){
-    // el = document.querySelector("#issue-form");
-    // el.addEventListener('submit', saveIssue);
+    displayIssues();
     document.querySelector("#issue-form").addEventListener('submit', saveIssue);
-    // document.getElementById("issue-form").addEventListener("submit", saveIssue);
 };
 
-function deleteIssue(e, id) {
+function deleteIssue(id) {
     const issues = JSON.parse(localStorage.getItem("issues"));
     for (let i = 0; i < issues.length; i++) {
         if (issues[i].id === id) {
@@ -13,35 +11,31 @@ function deleteIssue(e, id) {
         }
     }
     localStorage.setItem("issues", JSON.stringify(issues));
-    e.preventDefault();
+    // e.preventDefault();
     displayIssues();
 }
 
 
-function setStatusClosed(e, id) {
+function changeStatus(id) {
     const issues = JSON.parse(localStorage.getItem("issues"));
     for (let i = 0; i < issues.length; i++) {
         if (issues[i].id === id) {
-            issues[i].open = false;
+            issues[i].isOpen = !issues[i].isOpen;
         }
     }
     localStorage.setItem("issues", JSON.stringify(issues));
-    e.preventDefault();
+    // e.preventDefault();
     displayIssues();
 }
 
 
 function saveIssue(e){
-    // e.preventDefault();
-
     let issueId = chance.guid();
-    // let issueId = "abc123";
-    console.log(issueId);
     let issueTitle = document.querySelector("#title").value;
     let issueDesc = document.querySelector("#description").value;
     let issueSeverity = document.querySelector("#priority").value;
     let issueAssignee = document.querySelector("#assignee").value;
-    let issueStatus = true;
+    let isOpen = isOpen;
 
     let issue = {
         id: issueId,
@@ -49,25 +43,16 @@ function saveIssue(e){
         desc: issueDesc,
         priority: issueSeverity,
         assignee: issueAssignee,
-        isOpen: issueStatus
+        isOpen: isOpen
     };
-    console.log(issue);
 
-    // let issues = [];
-
-    if (localStorage.getItem("issues") === null) {
-        let issues = [];
-        issues.push(issue);
-        localStorage.setItem("issues", JSON.stringify(issues));
-    } else {
-        let issues = JSON.parse(localStorage.getItem("issues"));
-        issues.push(issue);
-        localStorage.setItem("issues", JSON.stringify(issues));
-    }
+    let issues = JSON.parse(localStorage.getItem("issues")) || [];
+    issues.push(issue);
+    localStorage.setItem("issues", JSON.stringify(issues));
 
     document.querySelector('#issue-form').reset();
     displayIssues();
-    e.preventDefault();
+    // e.preventDefault();
 }
 
 
@@ -85,52 +70,42 @@ function displayIssues(){
         let desc = issues[i].desc;
         let assignee = issues[i].assignee;
         let priority = issues[i].priority;
-        // let isOpen = issues[i].isOpen;
-        let status = (issues[i].isOpen === true) ? "Open" : "Closed";
+        let isOpen = issues[i].isOpen;
 
-        issueList.innerHTML +=   '<div class="well">'+
-            '<h6>ID: ' + id + '</h6>'+
-            '<p><span class="label label-info">' + status + '</span></p>'+
-            '<h3>' + desc + '</h3>'+
-            '<p><span class="glyphicon glyphicon-time"></span> ' + priority + ' '+
-            '<span class="glyphicon glyphicon-user"></span> ' + assignee + '</p>'+
-            '<a href="#" class="btn btn-warning" onclick="setStatusClosed(e, \''+id+'\')">Close</a> '+
-            '<a href="#" class="btn btn-danger" onclick="deleteIssue(e, \''+id+'\')">Delete</a>'+
-            '</div>';
-
-        // let itemDiv = document.createElement("div");
-        // let h6Id = document.createElement("h6");
-        // let pStatus = document.createElement("p");
-        // let h3Desc = document.createElement("h3");
-        // let pSeverityAndAssignee = document.createElement("p");
-        // let aDelete = document.createElement("a");
-        // let aClose = document.createElement("a");
-        //
-        // itemDiv.classList.add("issue-item");
-        // pStatus.classList.add("label", "label-info");
-        // aDelete.classList.add("btn", "btn-warning");
-        // aClose.classList.add("btn", "btn-danger");
-        // aDelete.setAttribute("onclick", `deleteIssue(${id})`);
-        // aClose.setAttribute("onclick", `setStatusClosed(${id})`);
-        //
-        // h6Id.appendChild(document.createTextNode(`ID: ${id}`));
-        // // pStatus.appendChild(document.createTextNode(`Open: ${status}`));
-        // pStatus.appendChild(document.createTextNode(`${isOpen === true ? 'Open' : 'Closed'}`));
-        // h3Desc.appendChild(document.createTextNode(desc));
-        // pSeverityAndAssignee.appendChild(document.createTextNode(`Priority: ${priority}; Assignee: ${assignee}`));
-        // aDelete.appendChild(document.createTextNode("Delete"));
-        // aClose.appendChild(document.createTextNode("Close"));
-        //
-        // itemDiv.appendChild(h6Id);
-        // itemDiv.appendChild(pStatus);
-        // itemDiv.appendChild(h3Desc);
-        // itemDiv.appendChild(pSeverityAndAssignee);
-        // itemDiv.appendChild(aDelete);
-        // itemDiv.appendChild(aClose);
-
-        // let issueItem = document.createElement("div");
-        // issueItem.classList.add("issue-item");
-        // let h6 = document.createElement("h6");
-        // issueList.innerHTML = `<div class="issue-item"></div><h6>Issue ID: ${id}</h6><p><span class="label label-info">${status}</span></p><h3>${desc}</h3><p><span class="glyphicon glyphicon-time"></span>${priority} <span class="glyphicon glyphicon-user"></span>${assignee}</p><a href="#" class="btn btn-warning" onclick="setStatusClosed(${id})">Close</a><a href="#" class="btn btn-danger" onclick="deleteIssue(${id})">Delete</a>`;
+        issueList.innerHTML += `
+            <div class="card">
+                <div class="card-header">
+                    ${title}
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+        
+                        <dt class="col-sm-3">Status: </dt>
+                        <dt class="col-sm-9">${isOpen === true ? `Open` : `Closed`}</dt>
+        
+                        <dt class="col-sm-3">Assignee: </dt>
+                        <dt class="col-sm-9">${assignee}</dt>
+        
+                        <dt class="col-sm-3">Priority: </dt>
+                        <dt class="col-sm-9">${priority}</dt>
+        
+                        <dt class="col-sm-3">Id: </dt>
+                        <dt class="col-sm-9">${id}</dt>
+        
+                        <dt class="col-sm-3">Description: </dt>
+                        <dd class="col-sm-9">
+                            <p>${desc}</p>
+                        </dd>
+                        
+                    </dl>
+                    
+                    <div class="button-box">
+                        <a onclick="changeStatus('${id}')" class="btn btn-secondary">Change status</a>
+                        <a onclick="deleteIssue('${id}')" class="btn btn-danger">Delete</a>                
+                    </div>
+                </div>
+                
+                                
+            </div>`;
     }
 }

@@ -5,12 +5,16 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.18/chance.min.js"></script>-->
     <script src="https://chancejs.com/chance.min.js"></script>
     <script src="main.js" defer></script>
+    <style>
+        .card {
+            margin-bottom: 2vh;
+        }
+    </style>
     <title>Issue Tracker</title>
 </head>
-<body onload="displayIssues()">
+<body>
     <div class="container">
         <h1>Issue Tracker <small>by Pavel</small></h1>
         <div class="jumbotron">
@@ -42,16 +46,9 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
-
             </form>
         </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="issue-list"></div>
-            </div>
-        </div>
-
+        <div id="issue-list" class="container"></div>
     </div>
 </body>
 </html>
